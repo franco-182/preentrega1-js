@@ -67,7 +67,7 @@ mostrarCatalogo();
 while (saldoCliente > 0) {
   let opcionCompra = prompt("¿Desea comprar alguna zapatilla? (S/N)");
   if (opcionCompra === "S" || opcionCompra === "s") {
-    let opcionZapatilla = prompt("Ingrese el número de la zapatilla que desea comprar:");
+    let opcionZapatilla = prompt("Ingrese el número de la zapatilla que desea comprar:\n1. Vans Sk8-Hi - $8000 \n2. Nike SB Dunk Low - $12000 \n3. Adidas Superstar Vulc - $10000");
     let zapatilla = catalogoZapatillas[opcionZapatilla - 1];
     if (zapatilla) {
       let opcionTalle = prompt(`Ingrese el talle que desea para las ${zapatilla.marca} ${zapatilla.modelo}: ${zapatilla.talles.join(", ")}`);
