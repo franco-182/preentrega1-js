@@ -27,7 +27,7 @@ let carrito = [];
 
 //cargar carrito desde el localstorage
 
-if(localStorage.getItem("carrito")){
+if (localStorage.getItem("carrito")) {
   carrito = JSON.parse(localStorage.getItem("carrito"));
 }
 
@@ -96,32 +96,66 @@ const mostrarCarrito = () => {
           <h5>${producto.nombre}</h5>
           <p>${producto.precio}</p>
           <p>${producto.cantidad}</p>
-          <button class="btn colorBoton" id="eliminar${producto.id}"> Eliminar </button>
+          <div>
+            <button class="btn btn-primary" id="restar${producto.id}">-</button>
+            <button class="btn btn-primary" id="sumar${producto.id}">+</button>
+            <button class="btn colorBoton" id="eliminar${producto.id}">Eliminar</button>
+          </div>
         </div>
       </div>
     `;
-    contenedorCarrito.appendChild(card)
+    contenedorCarrito.appendChild(card);
 
     //eliminar productos del carrito
-    const boton = document.getElementById(`eliminar${producto.id}`);
-    boton.addEventListener("click", () => {
+    const botonEliminar = document.getElementById(`eliminar${producto.id}`);
+    botonEliminar.addEventListener("click", () => {
       eliminarDelCarrito(producto.id);
-    })
-  })
-  calcularTotal()
-}
+    });
 
-//funcion para eliminar producto del carrito
+    //sumar producto al carrito
+    const botonSumar = document.getElementById(`sumar${producto.id}`);
+    botonSumar.addEventListener("click", () => {
+      sumarProducto(producto.id);
+    });
 
-const eliminarDelCarrito = (id) => {
+    //restar producto del carrito
+    const botonRestar = document.getElementById(`restar${producto.id}`);
+    botonRestar.addEventListener("click", () => {
+      restarProducto(producto.id);
+    });
+  });
+  calcularTotal();
+};
+
+//funciones de sumar y restar productos
+const sumarProducto = (id) => {
   const producto = carrito.find(producto => producto.id === id);
-  const indice = carrito.indexOf(producto);
-  carrito.splice(indice, 1);
+  producto.cantidad++;
   mostrarCarrito();
 
   //localstorage
   localStorage.setItem("carrito", JSON.stringify(carrito));
 }
+
+const restarProducto = (id) => {
+  const producto = carrito.find(producto => producto.id === id);
+  if (producto.cantidad > 1) {
+    producto.cantidad--;
+    mostrarCarrito();
+
+    //localstorage
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+  } else {
+    eliminarDelCarrito(id);
+  }
+}
+
+//funcion para eliminar producto
+const eliminarDelCarrito = (id) => {
+  carrito = carrito.filter((producto) => producto.id !== id);
+  mostrarCarrito();
+};
+
 
 
 //total de la compra
@@ -135,6 +169,29 @@ const calcularTotal = () => {
   })
   total.innerHTML = `total: $${totalCompra}`;
 }
+
+//finalizar compra
+
+const finalizarCompra = document.getElementById("finalizarCompra");
+
+finalizarCompra.addEventListener("click", () => {
+
+  if (carrito.length === 0) {
+    Swal.fire(
+      'Error',
+      'No hay productos en el carrito',
+      'error'
+    )
+  } else {
+    Swal.fire(
+      'Felicitaciones',
+      'Haz realizado tu compra',
+      'success'
+    )
+    eliminarTodoElCarrito();
+  }
+
+});
 
 
 //vaciar el carrito
